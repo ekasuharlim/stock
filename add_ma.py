@@ -10,14 +10,16 @@ def calculate_ma(df_ticker_data):
     df_ticker_data = df_ticker_data.sort_values("<tgl>")
     df_ticker_data = df_ticker_data[["<open>","<close>","<high>","<low>","<volume>","<ticker>","<tgl>"]]
     df_ticker_data["<MA100>"]  = talib.SMA(df_ticker_data["<close>"],100)
-    df_ticker_data["<MA200>"]  = talib.SMA(df_ticker_data["<close>"],200)        
+    df_ticker_data["<MA200>"]  = talib.SMA(df_ticker_data["<close>"],200)
+    df_ticker_data["<MA30>"]  = talib.SMA(df_ticker_data["<close>"],30)
+    df_ticker_data["<MA10>"]  = talib.SMA(df_ticker_data["<close>"],10)
     df_ticker_data["<EMA8>"]  = talib.EMA(df_ticker_data["<close>"],8)
     return df_ticker_data
 
 def pct_diff(a,b):
     return (abs(a-b) / ((a + b) / 2)) * 100 
 
-localdir_result = "C:\\Eka\\stock\\result"
+localdir_result = "/home/Kiasemoto/dev/stock/result/"
 df_all_data = pd.read_csv(osp.join(localdir_result,"alldata.csv"))
 df_all_data["<tgl>"] = pd.to_datetime(df_all_data["<date>"])
 
@@ -30,6 +32,14 @@ for current_ticker in all_ticker:
     ma100 = df_last_data.iloc[0]["<MA100>"]
     ema8 = df_last_data.iloc[0]["<EMA8>"]
     ma200 = df_last_data.iloc[0]["<MA200>"]
+    ma10 = df_last_data.iloc[0]["<MA10>"]
+    ma30 = df_last_data.iloc[0]["<MA30>"]
+
+    if(not math.isnan(ma10) and not math.isnan(ma30)):
+        pct_ma30_diff = pct_diff(ma10,ma30)
+        if pct_ma30_diff < 0.5 and pct_ma30_diff > 0:
+            print('{} - diff {} - ma10 {} - ma30 {} '.format(current_ticker,pct_ma30_diff,ma10,ma30))
+
     
     if(not math.isnan(ma100) and not math.isnan(ma200)):
         pct_ma_diff = pct_diff(ma100,ma200)

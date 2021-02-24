@@ -5,7 +5,7 @@ import os.path as osp
 import time
 
 data_bej = "http://www.dataharianbei.com"
-localdir = "C:\Eka\stock\data"
+localdir = "/home/Kiasemoto/dev/stock/data/"
 
 def write_file(localdir,filename,content):
     file_path = osp.join(localdir,filename)
