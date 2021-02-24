@@ -27,6 +27,23 @@ all_ticker = df_all_data["<ticker>"].drop_duplicates().sort_values()
 for current_ticker in all_ticker:
     df_current_ticker = df_all_data[df_all_data["<ticker>"] == current_ticker]
     df_current_ticker = calculate_ma(df_current_ticker)
+    df_last_data = df_current_ticker.tail(1)
+    df_last_10_data = df_current_ticker.tail(10)
+    ma10 = df_last_data.iloc[0]["<MA10>"]
+    ma30 = df_last_data.iloc[0]["<MA30>"]
+    lastma10 = df_last_10_data.iloc[0]["<MA10>"]
+    lastma30 = df_last_10_data.iloc[0]["<MA30>"]
+
+    if(not math.isnan(ma10) and not math.isnan(ma30) and not math.isnan(lastma10) and not math.isnan(lastma30)):
+        pct_ma30_diff = pct_diff(ma10,ma30)
+        pct_last_ma30_diff = pct_diff(lastma10,lastma30)
+        if pct_ma30_diff < 0.5 and pct_ma30_diff > 0 and pct_last_ma30_diff > 10:
+            print('{} - diff {} - ma10 {} - ma30 {} last ma10 {}'.format(current_ticker,pct_ma30_diff,ma10,ma30,lastma10))
+
+
+for current_ticker in all_ticker:
+    df_current_ticker = df_all_data[df_all_data["<ticker>"] == current_ticker]
+    df_current_ticker = calculate_ma(df_current_ticker)
     last_ma100 = df_current_ticker.tail(3).iloc[0]["<MA100>"]
     df_last_data = df_current_ticker.tail(1)
     ma100 = df_last_data.iloc[0]["<MA100>"]
@@ -34,11 +51,6 @@ for current_ticker in all_ticker:
     ma200 = df_last_data.iloc[0]["<MA200>"]
     ma10 = df_last_data.iloc[0]["<MA10>"]
     ma30 = df_last_data.iloc[0]["<MA30>"]
-
-    if(not math.isnan(ma10) and not math.isnan(ma30)):
-        pct_ma30_diff = pct_diff(ma10,ma30)
-        if pct_ma30_diff < 0.5 and pct_ma30_diff > 0:
-            print('{} - diff {} - ma10 {} - ma30 {} '.format(current_ticker,pct_ma30_diff,ma10,ma30))
 
     
     if(not math.isnan(ma100) and not math.isnan(ma200)):
