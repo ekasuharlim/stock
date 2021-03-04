@@ -10,11 +10,15 @@ def calculate_low(df_ticker_data):
     df_ticker_data = df_ticker_data.sort_values("<tgl>")
     df_ticker_data = df_ticker_data[["<open>","<close>","<high>","<low>","<volume>","<ticker>","<tgl>"]]
     df_months = df_ticker_data.tail(180)
-    dt_months_sorted = dt_months.sort_values("<close>")
-    lowest = dt_months_sorted.head(1).iloc[0]["<close>"]
-    hihgest = dt_months_sorted.tail(1).iloc[0]["<close>"]
+    df_months_sorted = df_months.sort_values("<close>")
+    lowest = df_months_sorted.head(1).iloc[0]["<close>"]
+    highest = df_months_sorted.tail(1).iloc[0]["<close>"]
     current = df_ticker_data.tail(1).iloc[0]["<close>"]
-    print('current {0} low {1} high {2}'.format(current,lowest,highest))      
+    name = df_ticker_data.tail(1).iloc[0]["<ticker>"]
+    pctHigh =  pct_diff(current,highest)
+    pctLow = pct_diff(current,lowest)
+    if pctLow > 10  and pctLow < 20 and pctHigh > 60 :
+       print('name {0} current {1} low {2} high {3}'.format(name,current,lowest,highest))      
     return df_ticker_data
 
 def pct_diff(a,b):
