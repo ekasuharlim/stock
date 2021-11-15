@@ -6,8 +6,8 @@ def load_daily_data(datadir,filename,dt_all_data):
     new_data = pd.read_csv(osp.join(datadir,filename)) 
     return pd.concat([dt_all_data,new_data],ignore_index = True)
 
-localdir = "/home/Kiasemoto/dev/stock/data/"
-localdir_result = "/home/Kiasemoto/dev/stock/result/"
+localdir = "/usr/src/stock/data/"
+localdir_result = "/usr/src/stock/result/"
 
 dt_all_data = pd.DataFrame()
 downloaded_file = [ f for f in os.listdir(localdir) if osp.isfile(osp.join(localdir,f))]

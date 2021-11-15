@@ -19,7 +19,7 @@ def calculate_ma(df_ticker_data):
 def pct_diff(a,b):
     return (abs(a-b) / ((a + b) / 2)) * 100 
 
-localdir_result = "/home/Kiasemoto/dev/stock/result/"
+localdir_result = "/usr/src/stock/result/"
 df_all_data = pd.read_csv(osp.join(localdir_result,"alldata.csv"))
 df_all_data["<tgl>"] = pd.to_datetime(df_all_data["<date>"])
 
@@ -41,29 +41,11 @@ for current_ticker in all_ticker:
         pct_ma30_diff = pct_diff(ma10,ma30)
         pct_last_ma30_diff = pct_diff(lastma10,lastma30)
         pct_last_5days_ma_diff = pct_diff(last5ma10,last5ma30)
-        #if pct_ma30_diff < 0.5 and pct_ma30_diff > 0 and pct_last_ma30_diff > 10:
-        if pct_last_5days_ma_diff > 0 and pct_last_5days_ma_diff < 1 and last5ma10 < last5ma30 and pct_last_ma30_diff > pct_last_5days_ma_diff:
+        if pct_ma30_diff < 0.5 and pct_ma30_diff > 0 and pct_last_ma30_diff > 10:
+        #if pct_last_5days_ma_diff > 0 and pct_last_5days_ma_diff < 1 and last5ma10 < last5ma30 and pct_last_ma30_diff > pct_last_5days_ma_diff:
             print('{} - diff {} - ma10 {} - ma30 {} last ma10 {}'.format(current_ticker,pct_ma30_diff,ma10,ma30,lastma10))
 
 
-for current_ticker in all_ticker:
-    df_current_ticker = df_all_data[df_all_data["<ticker>"] == current_ticker]
-    df_current_ticker = calculate_ma(df_current_ticker)
-    last_ma100 = df_current_ticker.tail(3).iloc[0]["<MA100>"]
-    df_last_data = df_current_ticker.tail(1)
-    ma100 = df_last_data.iloc[0]["<MA100>"]
-    ema8 = df_last_data.iloc[0]["<EMA8>"]
-    ma200 = df_last_data.iloc[0]["<MA200>"]
-    ma10 = df_last_data.iloc[0]["<MA10>"]
-    ma30 = df_last_data.iloc[0]["<MA30>"]
-
-    
-    if(not math.isnan(ma100) and not math.isnan(ma200)):
-        pct_ma_diff = pct_diff(ma100,ma200)
-        diff = pct_diff(ma100,ema8)
-        if diff < 2 and (last_ma100 - ma100 != 0) and (ema8 < ma100) and (ma100 < ma200) and (pct_ma_diff > 10):
-            print('{} - diff {} - ma100 {} - ema8 {} - {}'.format(current_ticker,diff,ma100,ema8,last_ma100))
-    df_current_ticker.to_csv(osp.join(localdir_result,"ma_{}.csv".format(current_ticker)))
 
 
 #om bokeh.plotting import figure, output_file, sh

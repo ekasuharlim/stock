@@ -1,0 +1,10 @@
+docker run -it --name myapp --rm  --volume C:\work\stock:/usr/src/  --net=host python_stock  bash
+
+RUN ./configure --prefix=/usr
+RUN make
+RUN sudo make install
+
+RUN pip install requests
+RUN pip install bs4
+RUN pip install pandas
+RUN pip install TA-Lib
