@@ -5,6 +5,7 @@ import talib
 import math
 
 from datetime import datetime
+from colorama import Fore
 
 def calculate_ma(df_ticker_data):
     df_ticker_data = df_ticker_data.sort_values("<tgl>")
@@ -19,8 +20,8 @@ def calculate_ma(df_ticker_data):
 def pct_diff(a,b):
     return (abs(a-b) / ((a + b) / 2)) * 100 
 
-localdir_result = "/usr/src/stock/result/"
-df_all_data = pd.read_csv(osp.join(localdir_result,"alldata.csv"))
+localdir = "/usr/src/stock/"
+df_all_data = pd.read_csv(osp.join(localdir,"result/alldata.csv"))
 df_all_data["<tgl>"] = pd.to_datetime(df_all_data["<date>"])
 
 all_ticker = df_all_data["<ticker>"].drop_duplicates().sort_values()
@@ -29,21 +30,52 @@ for current_ticker in all_ticker:
     df_current_ticker = calculate_ma(df_current_ticker)
     df_last_data = df_current_ticker.tail(1)
     df_last_10_data = df_current_ticker.tail(10)
-    df_last_5_data = df_current_ticker.tail(3)
+    df_last_5_data = df_current_ticker.tail(5)
+    price  = df_last_data.iloc[0]["<close>"]
     ma10 = df_last_data.iloc[0]["<MA10>"]
     ma30 = df_last_data.iloc[0]["<MA30>"]
-    lastma10 = df_last_10_data.iloc[0]["<MA10>"]
-    lastma30 = df_last_10_data.iloc[0]["<MA30>"]
+    last10ma10 = df_last_10_data.iloc[0]["<MA10>"]
+    last10ma30 = df_last_10_data.iloc[0]["<MA30>"]
     last5ma10 = df_last_5_data.iloc[0]["<MA10>"]
     last5ma30 = df_last_5_data.iloc[0]["<MA30>"]
 
-    if(not math.isnan(ma10) and not math.isnan(ma30) and not math.isnan(lastma10) and not math.isnan(lastma30)):
+    if(not math.isnan(ma10) and not math.isnan(ma30) and not math.isnan(last10ma10) and not math.isnan(last10ma30)):
         pct_ma30_diff = pct_diff(ma10,ma30)
-        pct_last_ma30_diff = pct_diff(lastma10,lastma30)
+        pct_last_ma30_diff = pct_diff(last10ma10,last10ma30)
         pct_last_5days_ma_diff = pct_diff(last5ma10,last5ma30)
         if pct_ma30_diff < 0.5 and pct_ma30_diff > 0 and pct_last_ma30_diff > 10:
         #if pct_last_5days_ma_diff > 0 and pct_last_5days_ma_diff < 1 and last5ma10 < last5ma30 and pct_last_ma30_diff > pct_last_5days_ma_diff:
-            print('{} - diff {} - ma10 {} - ma30 {} last ma10 {}'.format(current_ticker,pct_ma30_diff,ma10,ma30,lastma10))
+            print('{} - diff {} - ma10 {} - ma30 {} last 10 ma10 {} price {}'.format(current_ticker,pct_ma30_diff,ma10,ma30,last10ma10,price))
+print('---------------------------------------------------------------------')
+df_target = pd.read_csv(osp.join(localdir,"targetbuy.txt"))
+all_target = df_target["ticker"].sort_values()
+for target_ticker in all_target:    
+    df_current_ticker = df_all_data[df_all_data["<ticker>"] == target_ticker]
+    df_last_data = df_current_ticker.tail(1)
+    df_target_data = df_target[df_target["ticker"] == target_ticker]
+    close_price = df_last_data.iloc[0]["<close>"]
+    target_buy_price = df_target_data.iloc[0]["buy"]
+    pct_target_buy = pct_diff(close_price,target_buy_price)
+    if pct_target_buy <= 5: 
+       print(Fore.GREEN + '{}-close-{}-target-{}-pct-{:.2f}'.format(target_ticker,close_price,target_buy_price,pct_target_buy))
+    else:
+       print(Fore.WHITE + '{}-close-{}-target-{}-pct-{:.2f}'.format(target_ticker,close_price,target_buy_price,pct_target_buy))
+print(Fore.WHITE + 'Done')
+print('---------------------------------------------------------------------')
+df_target = pd.read_csv(osp.join(localdir,"targetsell.txt"))
+all_target = df_target["ticker"].sort_values()
+for target_ticker in all_target:    
+    df_current_ticker = df_all_data[df_all_data["<ticker>"] == target_ticker]
+    df_last_data = df_current_ticker.tail(1)
+    df_target_data = df_target[df_target["ticker"] == target_ticker]
+    close_price = df_last_data.iloc[0]["<close>"]
+    target_sell_price = df_target_data.iloc[0]["sell"]
+    pct_target_sell = pct_diff(close_price,target_sell_price)
+    if pct_target_sell <= 5: 
+       print(Fore.RED + '{}-close-{}-target-{}-pct-{:.2f}'.format(target_ticker,close_price,target_sell_price,pct_target_sell))
+    else:
+       print(Fore.WHITE + '{}-close-{}-target-{}-pct-{:.2f}'.format(target_ticker,close_price,target_buy_price,pct_target_buy))
+print(Fore.WHITE + 'Done')
 
 
 
