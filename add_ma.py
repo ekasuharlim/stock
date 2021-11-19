@@ -49,17 +49,23 @@ for current_ticker in all_ticker:
 print('---------------------------------------------------------------------')
 df_target = pd.read_csv(osp.join(localdir,"targetbuy.txt"))
 all_target = df_target["ticker"].sort_values()
+f_buy_result = open(osp.join(localdir,"buy_result.txt"),"w")
+f_buy_result.write('refdate,ticker,close,target,pct,status\n')
 for target_ticker in all_target:    
     df_current_ticker = df_all_data[df_all_data["<ticker>"] == target_ticker]
     df_last_data = df_current_ticker.tail(1)
+    ref_date = df_last_data.iloc[0]["<date>"]
     df_target_data = df_target[df_target["ticker"] == target_ticker]
     close_price = df_last_data.iloc[0]["<close>"]
     target_buy_price = df_target_data.iloc[0]["buy"]
     pct_target_buy = pct_diff(close_price,target_buy_price)
     if pct_target_buy <= 5: 
-       print(Fore.GREEN + '{}-close-{}-target-{}-pct-{:.2f}'.format(target_ticker,close_price,target_buy_price,pct_target_buy))
+       f_buy_result.write('{},{},{:.0f},{:.0f},{:.2f},1\n'.format(ref_date,target_ticker,close_price,target_buy_price,pct_target_buy))
+       print(Fore.GREEN + '{}-{}-close-{}-target-{}-pct-{:.2f}'.format(ref_date,target_ticker,close_price,target_buy_price,pct_target_buy))
     else:
-       print(Fore.WHITE + '{}-close-{}-target-{}-pct-{:.2f}'.format(target_ticker,close_price,target_buy_price,pct_target_buy))
+       f_buy_result.write('{},{},{:.0f},{:.0f},{:.2f},0\n'.format(ref_date,target_ticker,close_price,target_buy_price,pct_target_buy))
+       print(Fore.WHITE + '{}-{}-close-{}-target-{}-pct-{:.2f}'.format(ref_date,target_ticker,close_price,target_buy_price,pct_target_buy))
+f_buy_result.close()
 print(Fore.WHITE + 'Done')
 print('---------------------------------------------------------------------')
 df_target = pd.read_csv(osp.join(localdir,"targetsell.txt"))
@@ -76,7 +82,6 @@ for target_ticker in all_target:
     else:
        print(Fore.WHITE + '{}-close-{}-target-{}-pct-{:.2f}'.format(target_ticker,close_price,target_buy_price,pct_target_buy))
 print(Fore.WHITE + 'Done')
-
 
 
 
