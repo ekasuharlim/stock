@@ -1,5 +1,4 @@
 ticker,sell
-INDF,6500
 KLBF,1700
 BSDE,1400
 APLN,180

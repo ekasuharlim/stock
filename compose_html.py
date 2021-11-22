@@ -1,6 +1,7 @@
 import pandas as pd
 import os.path as osp
 import os
+import datetime
 
 localdir = "/usr/src/stock/"
 #create html 
@@ -41,6 +42,12 @@ for index,row in df_buy_target.iterrows():
 f_html.write("</table>")
 f_html.write("</div>")
 f_html.write("<div class='col-md-8'>")
+f_html.write("</div>")
+f_html.write("<div class='row'>")
+f_html.write("<div class='col-md-12'>")
+now = datetime.datetime.now()
+f_html.write(now.strftime('%H:%M:%S on %A, %B the %dth, %Y'))
+f_html.write("</div>")
 f_html.write("</div>")
 f_html.write("</body>")
 f_html.write("</html>")
