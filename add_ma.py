@@ -8,7 +8,7 @@ from datetime import datetime
 from colorama import Fore
 
 def calculate_ma(df_ticker_data):
-    df_ticker_data = df_ticker_data.sort_values("<tgl>")
+    df_ticker_data = df_ticker_data.sort_values(by="<tgl>",ascending=False)
     df_ticker_data = df_ticker_data[["<open>","<close>","<high>","<low>","<volume>","<ticker>","<tgl>"]]
     df_ticker_data["<MA100>"]  = talib.SMA(df_ticker_data["<close>"],100)
     df_ticker_data["<MA200>"]  = talib.SMA(df_ticker_data["<close>"],200)
