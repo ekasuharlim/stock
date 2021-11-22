@@ -22,6 +22,8 @@ def pct_diff(a,b):
 
 localdir = "/usr/src/stock/"
 df_all_data = pd.read_csv(osp.join(localdir,"result/alldata.csv"))
+f_ma_result = open(osp.join(localdir,"ma_result.txt"),"w")
+f_ma_result.write('current_ticker,pct_ma30_diff,ma10,ma30,last10ma10,price\n')
 df_all_data["<tgl>"] = pd.to_datetime(df_all_data["<date>"])
 
 all_ticker = df_all_data["<ticker>"].drop_duplicates().sort_values()
@@ -46,6 +48,8 @@ for current_ticker in all_ticker:
         if pct_ma30_diff < 0.5 and pct_ma30_diff > 0 and pct_last_ma30_diff > 10:
         #if pct_last_5days_ma_diff > 0 and pct_last_5days_ma_diff < 1 and last5ma10 < last5ma30 and pct_last_ma30_diff > pct_last_5days_ma_diff:
             print('{} - diff {} - ma10 {} - ma30 {} last 10 ma10 {} price {}'.format(current_ticker,pct_ma30_diff,ma10,ma30,last10ma10,price))
+            f_ma_result.write('{},{:.4f},{:.2f},{:.2f},{:.2f},{:.0f}\n'.format(current_ticker,pct_ma30_diff,ma10,ma30,last10ma10,price))
+f_ma_result.close()
 print('---------------------------------------------------------------------')
 df_target = pd.read_csv(osp.join(localdir,"targetbuy.txt"))
 all_target = df_target["ticker"].sort_values()

@@ -1,0 +1,3 @@
+current_ticker,pct_ma30_diff,ma10,ma30,last10ma10,price
+SWAT,0.4473,171.80,171.03,187.50,156
+TNCA,0.2238,744.00,745.67,692.00,1110
