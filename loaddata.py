@@ -10,7 +10,9 @@ localdir = "/usr/src/stock/data/"
 localdir_result = "/usr/src/stock/result/"
 
 dt_all_data = pd.DataFrame()
-downloaded_file = [ f for f in os.listdir(localdir) if osp.isfile(osp.join(localdir,f))]
+listdir = os.listdir(localdir)
+listdir.sort()
+downloaded_file = [ f for f in listdir if osp.isfile(osp.join(localdir,f))]
 for daily_file in downloaded_file:
     print(daily_file)
     dt_all_data = load_daily_data(localdir,daily_file,dt_all_data)    
