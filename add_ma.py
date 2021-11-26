@@ -83,12 +83,14 @@ for target_ticker in all_target:
     close_price = df_last_data.iloc[0]["<close>"]
     target_sell_price = df_target_data.iloc[0]["sell"]
     pct_target_sell = pct_diff(close_price,target_sell_price)
-    if pct_target_sell <= 5: 
+    if close_price < target_sell_price:
+       pct_target_sell = pct_target_sell * -1
+    if pct_target_sell >= 3: 
        f_sell_result.write('{},{},{:.0f},{:.0f},{:.2f},1\n'.format(ref_date,target_ticker,close_price,target_sell_price,pct_target_sell))
        print(Fore.RED + '{}-close-{}-target-{}-pct-{:.2f}'.format(target_ticker,close_price,target_sell_price,pct_target_sell))
     else:
        f_sell_result.write('{},{},{:.0f},{:.0f},{:.2f},0\n'.format(ref_date,target_ticker,close_price,target_sell_price,pct_target_sell))
-       print(Fore.WHITE + '{}-close-{}-target-{}-pct-{:.2f}'.format(target_ticker,close_price,target_buy_price,pct_target_buy))
+       print(Fore.WHITE + '{}-close-{}-target-{}-pct-{:.2f}'.format(target_ticker,close_price,target_sell_price,pct_target_sell))
 print(Fore.WHITE + 'Done')
 f_sell_result.close()
 
