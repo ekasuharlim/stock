@@ -2,3 +2,4 @@ ticker,sell
 KLBF,1700
 BSDE,1400
 APLN,180
+SMGR,9200

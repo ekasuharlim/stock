@@ -72,6 +72,8 @@ for target_ticker in all_target:
 f_buy_result.close()
 print(Fore.WHITE + 'Done')
 print('---------------------------------------------------------------------')
+f_sell_result = open(osp.join(localdir,"sell_result.txt"),"w")
+f_sell_result.write('refdate,ticker,close,target,pct,status\n')
 df_target = pd.read_csv(osp.join(localdir,"targetsell.txt"))
 all_target = df_target["ticker"].sort_values()
 for target_ticker in all_target:    
@@ -82,10 +84,13 @@ for target_ticker in all_target:
     target_sell_price = df_target_data.iloc[0]["sell"]
     pct_target_sell = pct_diff(close_price,target_sell_price)
     if pct_target_sell <= 5: 
+       f_sell_result.write('{},{},{:.0f},{:.0f},{:.2f},1\n'.format(ref_date,target_ticker,close_price,target_sell_price,pct_target_sell))
        print(Fore.RED + '{}-close-{}-target-{}-pct-{:.2f}'.format(target_ticker,close_price,target_sell_price,pct_target_sell))
     else:
+       f_sell_result.write('{},{},{:.0f},{:.0f},{:.2f},0\n'.format(ref_date,target_ticker,close_price,target_sell_price,pct_target_sell))
        print(Fore.WHITE + '{}-close-{}-target-{}-pct-{:.2f}'.format(target_ticker,close_price,target_buy_price,pct_target_buy))
 print(Fore.WHITE + 'Done')
+f_sell_result.close()
 
 
 
